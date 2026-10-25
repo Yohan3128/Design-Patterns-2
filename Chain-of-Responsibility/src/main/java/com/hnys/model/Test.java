@@ -20,38 +20,45 @@ class Patient {
 
 
 abstract class Doctor {
+    private Doctor doctor;
+
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
+    }
+
+    public Doctor getDoctor() {
+        return doctor;
+    }
+
     public abstract void handle(Patient patient);
 }
 
 
 class GeneralDoctor extends Doctor {
-
-    Specialist specialist;
-
+    @Override
     public void handle(Patient patient) {
 
         if (patient.getSymptom().equalsIgnoreCase("Fever")) {
             System.out.println("General Doctor: Treating " + patient.getName() + " for " + patient.getSymptom());
         } else {
-            specialist.handle(patient);
+            this.getDoctor().handle(patient);
         }
     }
 }
 
 class Specialist extends Doctor {
-    Consultant consultant;
-
+    @Override
     public void handle(Patient patient) {
         if (patient.getSymptom().equalsIgnoreCase("Chest Pain")) {
             System.out.println("Specialist: Treating " + patient.getName() + " for " + patient.getSymptom());
         } else {
-            consultant.handle(patient);
+            this.getDoctor().handle(patient);
         }
     }
 }
 
 class Consultant extends Doctor {
-
+    @Override
     public void handle(Patient patient) {
         if (patient.getSymptom().equalsIgnoreCase("Heart Problem")) {
             System.out.println("Consultant: Treating " + patient.getName() + " for " + patient.getSymptom());
@@ -73,8 +80,8 @@ public class Test {
         Specialist specialist = new Specialist();
         Consultant consultant = new Consultant();
 
-        generalDoctor.specialist = specialist;
-        specialist.consultant = consultant;
+        generalDoctor.setDoctor(specialist);
+        specialist.setDoctor(consultant);
 
         generalDoctor.handle(patient);
     }
