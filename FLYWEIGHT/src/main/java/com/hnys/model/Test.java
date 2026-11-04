@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-abstract class Zombie {
+abstract class AbstractZombie {
     public abstract void display();
 }
 
-class SharedZombie extends Zombie {
+class SharedZombie {
 
     private String type;
     private int attackPower;
@@ -32,26 +32,32 @@ class SharedZombie extends Zombie {
         return texture;
     }
 
-    @Override
-    public void display() {
-        System.out.println("Zombie Type: " + this.type);
-        System.out.println("Attack Power: " + this.attackPower);
-        System.out.println("Texture: " + this.texture);
-    }
 }
 
-class UniqueZombie {
+class Zombie extends AbstractZombie{
     private int x;
     private int y;
     private int health;
 
-    private Zombie zombie;
+    private SharedZombie sharedZombie;
 
-    public UniqueZombie(int x, int y, int health, Zombie zombie) {
+    public Zombie(String type, int attackPower, String texture,int x, int y, int health) {
         this.x = x;
         this.y = y;
         this.health = health;
-        this.zombie = zombie;
+        this.sharedZombie = ZombiePool.getZombie(type, attackPower, texture);
+    }
+
+
+    @Override
+    public void display() {
+        System.out.println("Zombie Type: " + this.sharedZombie.getType());
+        System.out.println("Attack Power: " + this.sharedZombie.getAttackPower());
+        System.out.println("Texture: " + this.sharedZombie.getTexture());
+        System.out.println("Position: (" + this.x + ", " + this.y + ")");
+        System.out.println("Health: " + this.health);
+        System.out.println("-----------------------------");
+        System.out.println(this.sharedZombie);
     }
 }
 
@@ -70,13 +76,14 @@ class ZombiePool {
 
     private static final ArrayList<SharedZombie> zombies = new ArrayList<>();
 
-    public static Zombie getZombie(String type, int attackPower, String texture) {
+    public static SharedZombie getZombie(String type, int attackPower, String texture) {
 
             SharedZombie sz = null;
 
         for (SharedZombie szItem : zombies) {
             if (szItem.getType().equals(type) && szItem.getAttackPower() == attackPower && szItem.getTexture().equals(texture)) {
                 sz = szItem;
+                break;
             }
         }
         if (sz == null) {
@@ -92,14 +99,14 @@ class ZombiePool {
 public class Test {
 
     public static void main(String[] args) {
-//        Zombie z1 = new ConcreteZombie("IceZombie",10,"blue",250,250,100);
-//        Zombie z2 = new Zombie("FireZombie",25,"blue",100,200,50);
-//        Zombie z3 = new Zombie("IceZombie",10,"blue",500,200,90);
-//        Zombie z4 = new Zombie("IceZombie",10,"blue",750,200,50);
+        Zombie z1 = new Zombie("IceZombie",10,"blue",250,250,100);
+        Zombie z2 = new Zombie("FireZombie",25,"blue",100,200,50);
+        Zombie z3 = new Zombie("IceZombie",10,"blue",500,200,90);
+        Zombie z4 = new Zombie("IceZombie",10,"blue",750,200,50);
 
-//        z1.display();
-//        z2.display();
-//        z3.display();
-//        z4.display();
+        z1.display();
+        z2.display();
+        z3.display();
+        z4.display();
     }
 }
