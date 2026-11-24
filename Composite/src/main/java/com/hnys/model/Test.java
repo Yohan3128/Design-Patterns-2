@@ -80,7 +80,7 @@ public class Test {
 
         folder1.addComponent(folder2);
         folder1.addComponent(folder3);
-        
+
         folder1.display();
     }
 }
